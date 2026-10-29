@@ -16,7 +16,7 @@
 
     <h1>Meu Player Sem Anúncios</h1>
 
-    <!-- Vídeo Real do Oceano -->
+    <!-- Vídeo de Teste (Oceano) -->
     <video id="meuVideo" controls>
         <source src="https://zencdn.net" type="video/mp4">
         Seu navegador não suporta vídeos.
@@ -35,11 +35,11 @@
                     receiverApplicationId: chrome.cast.media.DEFAULT_MEDIA_RECEIVER_APP_ID,
                     autoJoinPolicy: chrome.cast.AutoJoinPolicy.ORIGIN_SCOPED
                 });
-                
+
                 context.addEventListener(cast.framework.CastContextEventType.SESSION_STATE_CHANGED, function() {
                     const currentContext = cast.framework.CastContext.getInstance();
                     const castSession = currentContext.getCurrentSession();
-                    
+
                     if (castSession) {
                         const videoSrc = document.getElementById('meuVideo').src;
                         const mediaInfo = new chrome.cast.media.MediaInfo(videoSrc, 'video/mp4');
