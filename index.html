@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meu Player de Vídeo</title>
+    <script src="https://gstatic.com"></script>
+    <style>
+        body { background: #121212; color: #fff; font-family: sans-serif; text-align: center; margin: 0; padding: 20px; }
+        h1 { font-size: 24px; margin-bottom: 20px; }
+        video { width: 100%; max-width: 600px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
+        google-cast-launcher { display: inline-block; width: 45px; height: 45px; cursor: pointer; margin-top: 20px; }
+    </style>
+</head>
+<body>
+
+    <h1>Meu Player Sem Anúncios</h1>
+
+    <!-- Vídeo Real do Oceano -->
+    <video id="meuVideo" controls>
+        <source src="https://zencdn.net" type="video/mp4">
+        Seu navegador não suporta vídeos.
+    </video>
+
+    <br>
+    <!-- Botão de Transmitir para a TV -->
+    <google-cast-launcher></google-cast-launcher>
+
+    <script>
+        // Inicialização sem parâmetros para evitar qualquer erro de linter no celular
+        window.__onGCastApiAvailable = function() {
+            if (window.cast && cast.framework) {
+                const context = cast.framework.CastContext.getInstance();
+                context.setOptions({
+                    receiverApplicationId: chrome.cast.media.DEFAULT_MEDIA_RECEIVER_APP_ID,
+                    autoJoinPolicy: chrome.cast.AutoJoinPolicy.ORIGIN_SCOPED
+                });
+                
+                context.addEventListener(cast.framework.CastContextEventType.SESSION_STATE_CHANGED, function() {
+                    const currentContext = cast.framework.CastContext.getInstance();
+                    const castSession = currentContext.getCurrentSession();
+                    
+                    if (castSession) {
+                        const videoSrc = document.getElementById('meuVideo').src;
+                        const mediaInfo = new chrome.cast.media.MediaInfo(videoSrc, 'video/mp4');
+                        const request = new chrome.cast.media.LoadRequest(mediaInfo);
+                        castSession.loadMedia(request);
+                    }
+                });
+            }
+        };
+    </script>
+</body>
+</html>
